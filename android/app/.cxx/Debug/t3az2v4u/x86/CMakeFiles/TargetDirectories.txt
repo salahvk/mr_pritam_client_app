@@ -1,0 +1,2 @@
+C:/Users/salah/Downloads/mr_pritam_client_app/mr_pritam_client_app/android/app/.cxx/Debug/t3az2v4u/x86/CMakeFiles/edit_cache.dir
+C:/Users/salah/Downloads/mr_pritam_client_app/mr_pritam_client_app/android/app/.cxx/Debug/t3az2v4u/x86/CMakeFiles/rebuild_cache.dir
