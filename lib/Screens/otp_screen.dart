@@ -8,14 +8,15 @@ import '../ClientRegistration/client_registration.dart';
 import '../CommonButton/common_button.dart';
 
 class OtpScreen extends StatelessWidget {
-  final int otpLength = 4;
+  final String otp;
+  final int otpLength = 6;
   final List<TextEditingController> controllers =
-      List.generate(4, (_) => TextEditingController());
+      List.generate(6, (_) => TextEditingController());
   final List<FocusNode> focusNode = List.generate(
-    4,
+    6,
     (_) => FocusNode(),
   );
-  OtpScreen({super.key});
+  OtpScreen({super.key, required this.otp});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class OtpScreen extends StatelessWidget {
                       onTap: () {
                         Get.back();
                       },
-                      child: Icon(Icons.arrow_back_ios_new)),
+                      child: const Icon(Icons.arrow_back_ios_new)),
                   SizedBox(
                     width: 50.w,
                   ),
@@ -72,7 +73,7 @@ class OtpScreen extends StatelessWidget {
                   SizedBox(
                     width: 10.w,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.check_circle,
                     color: Colors.green,
                   ),
@@ -109,7 +110,7 @@ class OtpScreen extends StatelessWidget {
                 (index) => Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0.w),
                   child: SizedBox(
-                    width: 60.w,
+                    width: 40.w,
                     // height: 40.h,
                     child: TextFormField(
                       textAlign: TextAlign.center,
@@ -122,7 +123,7 @@ class OtpScreen extends StatelessWidget {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.r),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Color(0xffF5A302),
                           ),
                         ),
@@ -174,9 +175,41 @@ class OtpScreen extends StatelessWidget {
                 fontSize: 18.sp,
                 textColor: Colors.white,
                 onPressed: () {
-                  Get.to(()=> ClientRegistration(),
-                  transition: Transition.fadeIn
-                  );
+                  String enteredOtp =
+                      controllers.map((controller) => controller.text).join();
+                  if (enteredOtp.length != otpLength) {
+                    Get.snackbar(
+                      "Error",
+                      "Please enter a complete OTP.",
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                    return;
+                  }
+
+                  if (enteredOtp == otp) {
+                    Get.snackbar(
+                      "Error",
+                      "OTP Verified Successfully",
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.green,
+                      colorText: Colors.white,
+                    );
+                    // OTP is correct, proceed to the next screen
+                    Get.to(() => ClientRegistration(),
+                        transition: Transition.fadeIn);
+                  } else {
+                    // OTP is incorrect, show an error message
+                    Get.snackbar(
+                      "Error",
+                      "Invalid OTP. Please try again.",
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                    return;
+                  }
                 })
           ],
         ),

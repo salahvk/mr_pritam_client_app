@@ -3,12 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_pritam_client_app/CommonButton/common_button.dart';
+import 'package:mr_pritam_client_app/api_client.dart';
 
 import 'forgot_password.dart';
 
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +70,8 @@ class SignInScreen extends StatelessWidget {
                       child: TextFormField(
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 10),
                           hintText: "Enter Email Address",
                           hintStyle: GoogleFonts.plusJakartaSans(
                               fontWeight: FontWeight.w200, fontSize: 14.sp),
@@ -86,11 +93,11 @@ class SignInScreen extends StatelessWidget {
                       child: TextFormField(
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          suffixIcon: Icon(
+                          suffixIcon: const Icon(
                             Icons.visibility_off,
                             color: Color(0xffF5A302),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 10),
                           hintText: "Enter Pasword",
                           hintStyle: GoogleFonts.plusJakartaSans(

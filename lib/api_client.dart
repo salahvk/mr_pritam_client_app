@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mr_pritam_client_app/api_helper.dart';
 import 'package:mr_pritam_client_app/models/banner_model.dart';
+import 'package:mr_pritam_client_app/models/login_response.dart';
+import 'package:mr_pritam_client_app/models/privacy_model.dart';
+import 'package:mr_pritam_client_app/models/terms_model.dart';
 
 class ApiService {
   static const String baseUrl = "https://pritam-backend.vercel.app";
@@ -72,7 +76,7 @@ class ApiService {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         if (json['status'] == 200) {
-          return json['data']; 
+          return json['data'];
         } else {
           throw Exception('API returned error: ${json['message']}');
         }
@@ -83,5 +87,50 @@ class ApiService {
       debugPrint('Error fetching user details: $e');
       return null;
     }
+  }
+
+  static Future<StaffLoginResponse> staffLogin(String email) async {
+    final url = Uri.parse('$baseUrl/api/v1/staff/login');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email}),
+    );
+
+    return ApiHelper.parseResponse<StaffLoginResponse>(
+      response,
+      (json) => StaffLoginResponse.fromJson(json),
+    );
+  }
+
+
+    static Future<PrivacyData> getPrivacy() async {
+    final url = Uri.parse('$baseUrl/api/v1/user/getPrivacy');
+
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    return ApiHelper.parseResponse<PrivacyData>(
+      response,
+      (json) => PrivacyData.fromJson(json),
+    );
+  }
+
+
+     static Future<TermsData> getTerms() async {
+    final url = Uri.parse('$baseUrl/api/v1/user/getTerms');
+
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    return ApiHelper.parseResponse<TermsData>(
+      response,
+      (json) => TermsData.fromJson(json),
+    );
   }
 }

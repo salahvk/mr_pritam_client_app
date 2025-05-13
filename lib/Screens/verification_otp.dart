@@ -2,13 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:mr_pritam_client_app/api_client.dart';
 
 import '../CommonButton/common_button.dart';
 import 'otp_screen.dart';
 
-class VerificationScreen extends StatelessWidget {
+class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key});
+
+  @override
+  State<VerificationScreen> createState() => _VerificationScreenState();
+}
+
+class _VerificationScreenState extends State<VerificationScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  bool _loading = false;
+
+  void _login() async {
+    setState(() => _loading = true);
+    try {
+      if (_emailController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter your email')),
+        );
+        return;
+      }
+      if (!_emailController.text.isEmail) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a valid email')),
+        );
+        return;
+      }
+      final response = await ApiService.staffLogin(_emailController.text);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('OTP sent: ${response.otp}')),
+      );
+      print('OTP sent: ${response.otp}');
+      Get.to(() => OtpScreen(otp: response.otp));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed: $e')),
+      );
+    }
+    setState(() => _loading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +58,10 @@ class VerificationScreen extends StatelessWidget {
             child: Row(
               children: [
                 InkWell(
-                    onTap : () {
+                    onTap: () {
                       Get.back();
                     },
-                    child: Icon(Icons.arrow_back_ios_new)),
+                    child: const Icon(Icons.arrow_back_ios_new)),
                 SizedBox(
                   width: 50.w,
                 ),
@@ -75,6 +112,7 @@ class VerificationScreen extends StatelessWidget {
                   )),
               elevation: 2,
               child: TextFormField(
+                controller: _emailController,
                 cursorColor: Colors.black,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(left: 20.w, right: 20.w),
@@ -91,16 +129,16 @@ class VerificationScreen extends StatelessWidget {
           SizedBox(
             height: 50.h,
           ),
-          CommonButton(
-              color: const Color(0xffF5A302),
-              title: "SEND OTP",
-              height: 60.h,
-              width: 340.w,
-              fontSize: 18.sp,
-              textColor: Colors.white,
-              onPressed: () {
-                Get.to(() =>  OtpScreen(),);
-              })
+          _loading
+              ? const CircularProgressIndicator()
+              : CommonButton(
+                  color: const Color(0xffF5A302),
+                  title: "SEND OTP",
+                  height: 60.h,
+                  width: 340.w,
+                  fontSize: 18.sp,
+                  textColor: Colors.white,
+                  onPressed: _login)
         ],
       ),
     );

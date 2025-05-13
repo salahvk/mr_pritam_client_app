@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_pritam_client_app/Screens/privacy_screen.dart';
 import 'package:mr_pritam_client_app/Screens/sign_in.dart';
+import 'package:mr_pritam_client_app/Screens/terms_and_conditions.dart';
 import 'package:mr_pritam_client_app/Screens/verification_otp.dart';
 
 import '../CommonButton/common_button.dart';
@@ -120,8 +122,9 @@ class ChoosePanel extends StatelessWidget {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Expanded(
+                                      flex: 1,
                                       child: Padding(
-                                        padding: EdgeInsets.only(),
+                                        padding: const EdgeInsets.only(),
                                         child: Text(
                                           "Client Registration",
                                           style: GoogleFonts.poppins(
@@ -129,7 +132,6 @@ class ChoosePanel extends StatelessWidget {
                                               fontWeight: FontWeight.w700),
                                         ),
                                       ),
-                                      flex: 1,
                                     ),
                                     InkWell(
                                       onTap: () {
@@ -266,6 +268,38 @@ class ChoosePanel extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                GestureDetector(
+                   onTap: () {
+                    // Handle Privacy Policy tap
+                    Get.to(
+                      () => TermsAndConditionsScreen(),
+                    );
+                  },
+                  child: Text(
+                    "Terms & Conditions",
+                    style: GoogleFonts.poppins(
+                        color: Colors.grey.shade500, fontSize: 14.sp),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // Handle Privacy Policy tap
+                    Get.to(
+                      () => PrivacyScreen(),
+                    );
+                  },
+                  child: Text(
+                    "Privacy Policy",
+                    style: GoogleFonts.poppins(
+                        color: Colors.grey.shade500, fontSize: 14.sp),
                   ),
                 ),
               ],
