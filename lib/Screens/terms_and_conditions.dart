@@ -15,6 +15,7 @@ class TermsAndConditionsScreen extends StatefulWidget {
 
 class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
   TermsData? termsData;
+  bool loading = true;
 
   @override
   void initState() {
@@ -25,7 +26,8 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
   Future<void> fetchTerms() async {
     final response = await ApiService.getTerms();
     setState(() {
-      termsData = response;
+      termsData = response[0];
+      loading = false;
     });
   }
 
@@ -35,26 +37,28 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
       appBar: AppBar(
         title: const Text('Terms and Conditions'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                termsData?.type ?? '',
-                style: Theme.of(context).textTheme.headlineSmall,
+      body: loading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      termsData?.type ?? '',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      termsData?.terms ?? '',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.justify,
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 16),
-              Text(
-                termsData?.terms ?? '',
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.justify,
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

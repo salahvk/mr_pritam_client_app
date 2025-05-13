@@ -1,20 +1,19 @@
 import 'dart:convert';
-
-import 'package:mr_pritam_client_app/models/base_response.dart';
 import 'package:http/http.dart' as http;
 
 class ApiHelper {
   static T parseResponse<T>(
     http.Response response,
-    T Function(Map<String, dynamic>) fromJsonT,
-  ) {
-    final jsonBody = json.decode(response.body);
-    final base = BaseResponse<T>.fromJson(jsonBody, fromJsonT);
-
-    if (response.statusCode == 200 && base.data != null) {
-      return base.data!;
+    T Function(dynamic json) fromJson, {
+    dynamic Function(Map<String, dynamic> json)? extractList,
+  }) {
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonBody = jsonDecode(response.body);
+      final dynamic data = extractList != null ? extractList(jsonBody) : jsonBody['data'];
+      return fromJson(data);
     } else {
-      throw Exception("API Error: ${base.message}");
+      throw Exception('Failed: ${response.statusCode}');
     }
   }
 }
+

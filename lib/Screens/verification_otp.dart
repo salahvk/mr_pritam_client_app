@@ -25,12 +25,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please enter your email')),
         );
+        _loading = false;
         return;
       }
       if (!_emailController.text.isEmail) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please enter a valid email')),
         );
+        _loading = false;
         return;
       }
       final response = await ApiService.staffLogin(_emailController.text);

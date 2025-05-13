@@ -13,6 +13,7 @@ class PrivacyScreen extends StatefulWidget {
 
 class _PrivacyScreenState extends State<PrivacyScreen> {
   PrivacyData? privacyData;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -21,9 +22,10 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
   }
 
   Future<void> fetchPrivacy() async {
-    final response = await ApiService.getPrivacy(); 
+    final response = await ApiService.getPrivacy();
     setState(() {
-      privacyData = response;
+      privacyData = response[0];
+      isLoading = false;
     });
   }
 
@@ -33,7 +35,7 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
       appBar: AppBar(
         title: const Text('Privacy Policy'),
       ),
-      body: privacyData == null
+      body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),

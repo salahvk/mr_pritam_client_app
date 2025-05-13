@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:mr_pritam_client_app/api_helper.dart';
 import 'package:mr_pritam_client_app/models/banner_model.dart';
 import 'package:mr_pritam_client_app/models/login_response.dart';
+import 'package:mr_pritam_client_app/models/mission_model.dart';
 import 'package:mr_pritam_client_app/models/privacy_model.dart';
 import 'package:mr_pritam_client_app/models/terms_model.dart';
 
@@ -89,6 +90,44 @@ class ApiService {
     }
   }
 
+  static Future<Map<String, dynamic>?> getAdData() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/v1/admin/getAds'),
+      );
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        if (json['status'] == 200) {
+          return json['data'];
+        } else {
+          throw Exception('API returned error: ${json['message']}');
+        }
+      } else {
+        throw Exception('Failed with status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Error fetching user details: $e');
+      return null;
+    }
+  }
+
+  static Future<List<MissionModel>> getAllPreviousMission() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/v1/Staff/getAllPreviousMission'),
+      headers: {
+        'Authorization': 'Bearer $_token',
+      },
+    );
+
+    return ApiHelper.parseResponse<List<MissionModel>>(
+      response,
+      (json) =>
+          (json as List).map((item) => MissionModel.fromJson(item)).toList(),
+      extractList: (json) => json['data'],
+    );
+  }
+
   static Future<StaffLoginResponse> staffLogin(String email) async {
     final url = Uri.parse('$baseUrl/api/v1/staff/login');
 
@@ -104,8 +143,7 @@ class ApiService {
     );
   }
 
-
-    static Future<PrivacyData> getPrivacy() async {
+  static Future<List<PrivacyData>> getPrivacy() async {
     final url = Uri.parse('$baseUrl/api/v1/user/getPrivacy');
 
     final response = await http.get(
@@ -113,14 +151,15 @@ class ApiService {
       headers: {'Content-Type': 'application/json'},
     );
 
-    return ApiHelper.parseResponse<PrivacyData>(
+    return ApiHelper.parseResponse<List<PrivacyData>>(
       response,
-      (json) => PrivacyData.fromJson(json),
+      (json) =>
+          (json as List).map((item) => PrivacyData.fromJson(item)).toList(),
+      extractList: (json) => json['data'],
     );
   }
 
-
-     static Future<TermsData> getTerms() async {
+  static Future<List<TermsData>> getTerms() async {
     final url = Uri.parse('$baseUrl/api/v1/user/getTerms');
 
     final response = await http.get(
@@ -128,9 +167,10 @@ class ApiService {
       headers: {'Content-Type': 'application/json'},
     );
 
-    return ApiHelper.parseResponse<TermsData>(
+    return ApiHelper.parseResponse<List<TermsData>>(
       response,
-      (json) => TermsData.fromJson(json),
+      (json) => (json as List).map((item) => TermsData.fromJson(item)).toList(),
+      extractList: (json) => json['data'],
     );
   }
 }

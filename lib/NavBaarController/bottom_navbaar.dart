@@ -3,7 +3,9 @@ import 'package:mr_pritam_client_app/NavBaarController/home.dart';
 import 'package:mr_pritam_client_app/NavBaarController/mission.dart';
 import 'package:mr_pritam_client_app/NavBaarController/profile.dart';
 import 'package:mr_pritam_client_app/NavBaarController/tickting.dart';
+import 'package:mr_pritam_client_app/Screens/ad_detail_screen.dart';
 import 'package:mr_pritam_client_app/api_client.dart';
+import 'package:mr_pritam_client_app/models/mission_model.dart';
 
 class BottomNavbaar extends StatefulWidget {
   const BottomNavbaar({super.key});
@@ -14,17 +16,24 @@ class BottomNavbaar extends StatefulWidget {
 
 class _BottomNavbaarState extends State<BottomNavbaar> {
   Map<String, dynamic>? userData;
+  Map<String, dynamic>? adData;
+  List<MissionModel>? missionData;
 
   @override
   void initState() {
     super.initState();
-    loadProfile();
+    loadHomeData();
   }
 
-  void loadProfile() async {
+  void loadHomeData() async {
     final data = await ApiService.getMyDetails();
+    final adDatas = await ApiService.getAdData();
+    final missionDatas = await ApiService.getAllPreviousMission();
+    print("missionDatas: $missionDatas");
     setState(() {
       userData = data;
+      adData = adDatas;
+      missionData = missionDatas;
     });
 
     if (userData != null) {
@@ -41,7 +50,12 @@ class _BottomNavbaarState extends State<BottomNavbaar> {
   Widget build(BuildContext context) {
     final List<Widget> screen = [
       const HomeScreen(),
-      const MissionScreen(),
+      AdDetailScreen(
+        adData: adData ?? {},
+      ),
+      MissionScreen(
+        missionData: missionData ?? [],
+      ),
       const TicketingScreen(),
       ProfileScreen(data: userData ?? {}),
     ];
@@ -83,6 +97,20 @@ class _BottomNavbaarState extends State<BottomNavbaar> {
                           size: 45,
                           color: Color(0xffF5A302),
                         )),
+                    BottomNavigationBarItem(
+                      icon: const Icon(
+                        Icons.ad_units_outlined,
+                        size: 30,
+                        color: Colors.grey,
+                      ),
+                      label: "Advertisement",
+                      activeIcon: Image.asset(
+                        "assets/images/office1.png",
+                        height: 55,
+                        width: 55,
+                        color: const Color(0xffF5A302),
+                      ),
+                    ),
                     BottomNavigationBarItem(
                       icon: Image.asset(
                         "assets/images/office.png",
