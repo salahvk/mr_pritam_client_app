@@ -1,8 +1,8 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_pritam_client_app/NavBaarController/widgets/banner_slider.dart';
 
 import 'cart_screen.dart';
 import 'notification.dart';
@@ -39,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
       "title": "Total Invoices"
     }
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Get.to(
                                     () => const NotificationScreen(),
                                     transition: Transition.fadeIn,
-                                    duration: Duration(milliseconds: 500),
+                                    duration: const Duration(milliseconds: 500),
                                   );
                                 },
                                 child: Image.asset(
@@ -109,19 +108,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    CarouselSlider(
-                      items: [
-                        Image.asset("assets/images/ceftt.png"),
-                        Image.asset("assets/images/insta.png"),
-                        Image.asset("assets/images/fscreen.png"),
-                      ],
-                      options: CarouselOptions(
-                          autoPlay: true,
-                          scrollDirection: Axis.horizontal,
-                          viewportFraction: 1),
+                    SizedBox(
+                      height: Get.height * 0.02,
+                    ),
+                    BannerSlider(),
+                    SizedBox(
+                      height: Get.height * 0.02,
                     ),
                     Card(
-                      color: Color(0xfffff2d8),
+                      color: const Color(0xfffff2d8),
                       child: SizedBox(
                         height: 100,
                         width: 350,
@@ -176,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: Get.height * 0.02,
                     ),
                     GridView.builder(
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: data.length,
                         gridDelegate:
@@ -238,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     item["subtitle"]!,
                                     style: const TextStyle(
                                       fontSize: 14,
-                                      color: Color(0xff595959B2),
+                                      color: Color(0xff595959b2),
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
